@@ -1,15 +1,14 @@
-import socket as s
+import socket, serial, time
+
 HOST = '127.0.0.1'
-PORT = 65434
-BUFFER = 1024
+PORT = 6595
 
-client_socket = s.socket(s.AF_INET, s.SOCK_STREAM)
-client_socket.connect((HOST, PORT))
+cli = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+cli.connect((HOST, PORT))
 
-print("Podaj numer krańcowego wyrazu:")
-op = input().encode("utf8")
-client_socket.send(op)
+arduino = serial.Serial("COM3", 9600)
+time.sleep(2)
 
-print("Twój ciąg Fibonacciego:")
-fibop = client_socket.recv(BUFFER).decode("utf8")
-print(fibop)
+while True:
+    data = arduino.readline()[0:4]
+    cli.send(str(data).encode('utf-8'))
